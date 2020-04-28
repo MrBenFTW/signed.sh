@@ -1,6 +1,6 @@
 <?php
 // Made by Quix
-include 'config.php';
+require 'config.php';
 $apps = array_filter(glob('uploads/*'), 'is_dir');
 foreach($apps as $app){
     $app = substr($app, 8);
@@ -8,6 +8,7 @@ foreach($apps as $app){
     $cert = file_get_contents('uploads/' . $app . '/cert.txt');
     if($remove_cert = true || $remove_dir = true)
         unlink('uploads/' . $app . '/cert.txt');
+    $remove_icon = false;
     if($remove_icon = true || $remove_dir = true)
     	rename('uploads/' . $app . '/' . $app . '.png', 'apps/' . $app . '/' . $app . '.png');
     else
@@ -16,8 +17,9 @@ foreach($apps as $app){
     	rename('uploads/' . $app . '/' . $app . '.ipa', 'apps/' . $app . '/' . $app . '_' . $cert . '.ipa');
     else
         copy('uploads/' . $app . '/' . $app . '.ipa', 'apps/' . $app . '/' . $app . '_' . $cert . '.ipa');
-    if($remove_dir = true)
+    if($remove_dir = true){
     	rmdir('uploads/' . $app);
+    }
     file_put_contents('apps/' . $app . '/' . $app . '_' . $cert . '.plist', '<?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
     <plist version="1.0">
